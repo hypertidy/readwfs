@@ -1,0 +1,173 @@
+---
+title: "Getting started with readwfs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with readwfs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+readwfs reads vector features from OGC Web Feature Services (WFS), OGC API
+Features (OAPIF), and ArcGIS REST endpoints. It returns plain tibbles with
+[wk](https://paleolimbot.github.io/wk/) geometry columns and uses
+[gdalraster](https://usdaforestservice.github.io/gdalraster/) for all I/O.
+
+The package is designed to make **navigating** web feature services less
+painful—discovering what layers exist, what fields they have, and pulling
+just the features you need into R.
+
+## Finding services
+
+readwfs ships with a small catalogue of known public services:
+
+```{r}
+library(readwfs)
+wfs_services()
+```
+
+This is deliberately minimal. The real world has thousands of WFS endpoints
+run by government agencies, utilities, and research organisations. Most are
+poorly documented. readwfs helps you explore them.
+
+## Discovering layers
+
+Point `wfs_layers()` at any WFS endpoint to see what's available:
+
+```{r}
+url <- wfs_example_url("list_tasmania")
+layers <- wfs_layers(url, version = "2.0.0", srs = "EPSG:28355")
+length(layers)
+head(layers)
+```
+
+Tasmania's LIST service has over 100 layers. `wfs_find_layers()` narrows
+things down:
+
+```{r}
+wfs_find_layers(url, "CADASTRAL|TASVEG|LOCAL_GOV",
+                version = "2.0.0", srs = "EPSG:28355")
+```
+
+## Inspecting layers before downloading
+
+`wfs_layer_info()` tells you the geometry type, feature count, and extent
+without downloading any features:
+
+```{r}
+wfs_layer_info(
+  url,
+  layers = c(
+    "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+    "Public_OpenDataWFS:TASVEG_4.0"
+  ),
+  version = "2.0.0", srs = "EPSG:28355"
+)
+```
+
+`wfs_fields()` shows the attribute schema:
+
+```{r}
+wfs_fields(url, "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+           version = "2.0.0", srs = "EPSG:28355")
+```
+
+## Reading features
+
+`wfs_read()` fetches features into a tibble. Use `bbox` to spatially
+filter and `max_features` to cap the request:
+
+```{r}
+library(dplyr)
+
+parcels <- wfs_read(
+  url,
+  layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+  bbox = wfs_example_bbox("sandy_bay"),
+  srs = "EPSG:28355",
+  max_features = 2000
+)
+parcels
+```
+
+The `geometry` column is a `wk::wkb` vector—wk's interchange format for
+spatial data in R:
+
+```{r}
+class(parcels$geometry)
+wk::wk_plot(parcels$geometry)
+```
+
+## Multiple layers, same area
+
+Fetch several layers from the same service for the same bbox:
+
+```{r}
+bbox <- wfs_example_bbox("sandy_bay")
+
+tasveg <- wfs_read(
+  url,
+  layer = "Public_OpenDataWFS:TASVEG_4.0",
+  bbox = bbox, srs = "EPSG:28355"
+)
+
+lga <- wfs_read(
+  url,
+  layer = "Public_OpenDataWFS:LIST_LOCAL_GOVERNMENT_AREAS",
+  bbox = bbox, srs = "EPSG:28355"
+)
+```
+
+## Spatial operations with geos
+
+wk geometry works directly with
+[geos](https://paleolimbot.github.io/geos/):
+
+```{r}
+library(geos)
+
+# Area of each parcel
+parcels |>
+  mutate(area_m2 = geos_area(geometry))
+```
+
+## Working with different service types
+
+readwfs auto-detects the service type from the URL. The same `wfs_read()`
+interface works for all of them:
+
+```{r}
+# WFS (auto-detected)
+wfs_layers("https://example.com/arcgis/services/Data/MapServer/WFSServer")
+
+# OAPIF (auto-detected from /collections in URL)
+wfs_layers("https://example.com/ogc/features/collections")
+
+# ArcGIS REST (auto-detected from arcgis + MapServer)
+wfs_layers("https://example.com/arcgis/rest/services/Data/MapServer",
+           driver = "ESRIJSON")
+```
+
+You can also force the driver explicitly with `driver = "WFS"`,
+`driver = "ESRIJSON"`, or `driver = "OAPIF"`.
+
+## Design choices
+
+readwfs returns **unclassed tibbles with wk geometry**, not sf objects.
+This keeps the dependency tree small and composable—you can use geos for
+geometry operations, gdalraster for raster work, and dplyr for data wrangling.
+
+If you need sf downstream:
+
+```{r}
+if (requireNamespace("sf", quietly = TRUE)) {
+  parcels_sf <- sf::st_as_sf(parcels, sf_column_name = "geometry")
+}
+```

@@ -1,0 +1,32 @@
+Package: readwfs
+Title: Read Vector Features from Web Feature Services and Friends
+Version: 0.0.0.9000
+Authors@R: 
+    person("Michael", "Sumner", , "mdsumner@gmail.com", role = c("aut", "cre"))
+Description: Read vector features from OGC Web Feature Services (WFS), 
+    OGC API Features (OAPIF), and ArcGIS REST FeatureServer/MapServer 
+    endpoints. Uses GDAL's OGR vector drivers via 'gdalraster' for 
+    connection handling and returns tibbles with 'wk' geometry columns.
+    Provides service discovery, layer listing, capability inspection, 
+    and bbox-filtered feature retrieval. Aims to make navigating public 
+    vector web services less painful.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 4.1.0)
+Imports:
+    gdalraster (>= 1.11.0),
+    wk,
+    tibble
+Suggests:
+    dplyr,
+    geos,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+URL: https://github.com/mdsumner/readwfs
+BugReports: https://github.com/mdsumner/readwfs/issues

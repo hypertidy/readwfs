@@ -1,0 +1,85 @@
+# readwfs
+
+Read vector features from OGC Web Feature Services (WFS), OGC API Features
+(OAPIF), and ArcGIS REST endpoints. Returns tibbles with
+[wk](https://paleolimbot.github.io/wk/) geometry columns.
+
+Built on [gdalraster](https://firelab.github.io/gdalraster/).
+
+## Installation
+
+```r
+# install.packages("pak")
+pak::pak("mdsumner/readwfs")
+```
+
+## Quick start
+
+```r
+library(readwfs)
+
+# What services do we know about?
+wfs_services()
+
+# Tasmania LIST open data WFS
+url <- wfs_example_url("list_tasmania")
+
+# What layers are there?
+wfs_layers(url, version = "2.0.0", srs = "EPSG:28355")
+
+# Find specific layers
+wfs_find_layers(url, "CADASTRAL|TASVEG")
+
+# Inspect before downloading
+wfs_fields(url, "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+           version = "2.0.0", srs = "EPSG:28355")
+
+# Read features
+parcels <- wfs_read(
+  url,
+  layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+  bbox = wfs_example_bbox("sandy_bay"),
+  srs = "EPSG:28355"
+)
+
+parcels
+wk::wk_plot(parcels$geometry)
+```
+
+## Service type auto-detection
+
+readwfs detects the service type from the URL pattern:
+
+| URL pattern | GDAL driver | Example |
+|---|---|---|
+| `WFSServer`, `service=WFS` | WFS | Tasmania LIST, Esri SampleWorldCities |
+| `arcgis/rest/…/MapServer`, `FeatureServer` | ESRIJSON | ArcGIS REST services |
+| `/collections`, `ogc/features` | OAPIF | OGC API Features |
+
+Or set `driver` explicitly: `wfs_read(url, layer, driver = "ESRIJSON")`.
+
+## Exported functions
+
+| Function | Purpose |
+|---|---|
+| `wfs_services()` | Catalogue of known public endpoints |
+| `wfs_layers()` | List all layers on a service |
+| `wfs_find_layers()` | Search layers by regex pattern |
+| `wfs_layer_info()` | Geometry type, extent, feature count |
+| `wfs_fields()` | Attribute schema for a layer |
+| `wfs_read()` | Fetch features → tibble + wk geometry |
+| `wfs_example_url()` | Pre-configured example URLs |
+| `wfs_example_bbox()` | Pre-configured bounding boxes |
+
+## Design
+
+- **gdalraster** for all I/O — no sf or terra required
+- **wk** vectors for geometry interchange
+- **tibble** for tabular output (unclassed, no sticky geometry)
+- **geos** for spatial operations (suggested, not required)
+
+## Contributing example services
+
+If you find a good public WFS / OAPIF / ArcGIS REST endpoint, open an issue.
+Good candidates are: no authentication required, reasonably fast, interesting
+data, and ideally from a different part of the world than existing examples.
