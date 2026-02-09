@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = TRUE
 )
 ```
 
@@ -92,7 +92,7 @@ parcels <- wfs_read(
   layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
   bbox = wfs_example_bbox("sandy_bay"),
   srs = "EPSG:28355",
-  max_features = 2000
+  max_features = 20
 )
 parcels
 ```
@@ -160,14 +160,6 @@ You can also force the driver explicitly with `driver = "WFS"`,
 
 ## Design choices
 
-readwfs returns **unclassed tibbles with wk geometry**, not sf objects.
-This keeps the dependency tree small and composable—you can use geos for
-geometry operations, gdalraster for raster work, and dplyr for data wrangling.
+readwfs returns **unclassed tibbles with wk geometry**.
+This keeps the dependency tree small and composable, wk provides interchange for R's spatial formats. 
 
-If you need sf downstream:
-
-```{r}
-if (requireNamespace("sf", quietly = TRUE)) {
-  parcels_sf <- sf::st_as_sf(parcels, sf_column_name = "geometry")
-}
-```

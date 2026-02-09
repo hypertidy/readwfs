@@ -46,7 +46,7 @@
 wfs_read <- function(base_url,
                      layer,
                      bbox = NULL,
-                     max_features = NULL,
+                     max_features = 100,
                      where = NULL,
                      driver = "auto",
                      version = NULL,
@@ -95,32 +95,35 @@ wfs_read <- function(base_url,
 
   feat_count <- tryCatch(v$getFeatureCount(), error = function(e) -1L)
 
-  message(sprintf(
-    "Reading '%s': %s features, geometry column '%s'",
-    layer,
-    if (feat_count < 0) "unknown" else format(feat_count, big.mark = ","),
-    geom_col %||% "(default)"
-  ))
+  msg_count <- if (feat_count < 0) "unknown" else format(feat_count, big.mark = ",")
+  message(sprintf("Reading '%s': %s features available, geometry column '%s'",
+                  layer, msg_count, geom_col %||% "(default)"))
 
-  raw <- v$fetch(-1)
+  # Cap for non-infinite max_features
+  use_max <- if (is.finite(max_features)) as.integer(max_features) else -1L
+  raw <- v$fetch(use_max)
 
   if (is.null(raw) || nrow(raw) == 0) {
     message("  0 features returned")
     return(empty_result())
   }
 
-  # For non-WFS, truncate if max_features was requested
-  if (!is.null(max_features) && conn$driver != "WFS") {
-    if (nrow(raw) > max_features) {
-      raw <- raw[seq_len(max_features), , drop = FALSE]
-    }
+  result <- as_wk_tibble(raw, geom_col)
+  n <- nrow(result)
+
+  if (feat_count > 0 && is.finite(max_features) && feat_count > n) {
+    message(sprintf(
+      "  %s features returned (politely capped at max_features = %s, %s more available; use max_features = Inf to get all)",
+      format(n, big.mark = ","),
+      format(as.integer(max_features), big.mark = ","),
+      format(feat_count - n, big.mark = ",")
+    ))
+  } else {
+    message(sprintf("  %s features returned", format(n, big.mark = ",")))
   }
 
-  result <- as_wk_tibble(raw, geom_col)
-  message(sprintf("  %d features returned", nrow(result)))
   result
 }
-
 #' Convert raw fetch result to tibble with wk geometry
 #' @keywords internal
 as_wk_tibble <- function(raw, geom_col) {
