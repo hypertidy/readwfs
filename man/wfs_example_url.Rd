@@ -11,7 +11,7 @@ wfs_example_url(service = c("list_tasmania", "esri_sample"))
 \itemize{
 \item \code{"list_tasmania"}: Tasmania LIST open data WFS (parcels, vegetation,
 local government areas, hydro, transport, and more)
-\item \code{"esri_sample"}: Esri SampleWorldCities WFS (continents, cities —
+\item \code{"esri_sample"}: Esri SampleWorldCities WFS (continents, cities  --
 small dataset, always available)
 }}
 }

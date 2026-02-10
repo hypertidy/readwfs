@@ -94,6 +94,7 @@ wfs_layer_info <- function(base_url, layers = NULL, driver = "auto",
 
 #' Inspect a single layer via GDALVector
 #' @keywords internal
+#' @importFrom methods new
 layer_info_one <- function(dsn, layer_name) {
   v <- new(gdalraster::GDALVector, dsn, layer_name, read_only = TRUE,
            open_options = "TRUST_CAPABILITIES_BOUNDS=YES")
@@ -181,6 +182,3 @@ wfs_fields <- function(base_url, layer, driver = "auto",
   )
 }
 
-#' Null-coalescing operator
-#' @keywords internal
-`%||%` <- function(x, y) if (is.null(x)) y else x

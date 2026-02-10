@@ -18,7 +18,7 @@ or a GDAL-prefixed connection string (e.g. \code{"WFS:https://..."}).}
 
 \item{layers}{Character vector of layer names to inspect, or \code{NULL}
 to inspect all layers. Inspecting all layers can be slow for large
-services—consider using \code{\link[=wfs_find_layers]{wfs_find_layers()}} first.}
+services -- consider using \code{\link[=wfs_find_layers]{wfs_find_layers()}} first.}
 
 \item{driver}{Character. One of \code{"auto"}, \code{"WFS"}, \code{"OAPIF"}, \code{"ESRIJSON"}.}
 

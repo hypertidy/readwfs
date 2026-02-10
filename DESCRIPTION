@@ -1,6 +1,6 @@
 Package: readwfs
 Title: Read Vector Features from Web Feature Services and Friends
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Michael", "Sumner", , "mdsumner@gmail.com", role = c("aut", "cre"))
 Description: Read vector features from OGC Web Feature Services (WFS), 
@@ -19,7 +19,8 @@ Depends:
 Imports:
     gdalraster (>= 1.11.0),
     wk,
-    tibble
+    tibble,
+    methods
 Suggests:
     dplyr,
     geos,

@@ -9,8 +9,8 @@ wfs_example_bbox(area = c("sandy_bay", "hobart"))
 \arguments{
 \item{area}{Character. One of:
 \itemize{
-\item \code{"sandy_bay"}: Sandy Bay, Hobart — EPSG:28355 (MGA Zone 55), ~600m x 600m
-\item \code{"hobart"}: Greater Hobart — EPSG:28355, ~10km x 10km
+\item \code{"sandy_bay"}: Sandy Bay, Hobart  --  EPSG:28355 (MGA Zone 55), ~600m x 600m
+\item \code{"hobart"}: Greater Hobart  --  EPSG:28355, ~10km x 10km
 }}
 }
 \value{

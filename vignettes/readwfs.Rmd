@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 readwfs reads vector features from OGC Web Feature Services (WFS), OGC API
 Features (OAPIF), and ArcGIS REST endpoints. It returns plain tibbles with
 [wk](https://paleolimbot.github.io/wk/) geometry columns and uses
-[gdalraster](https://usdaforestservice.github.io/gdalraster/) for all I/O.
+[gdalraster](https://firelab.github.io/gdalraster/) for all I/O.
 
 The package is designed to make **navigating** web feature services less
 painful -- discovering what layers exist, what fields they have, and pulling

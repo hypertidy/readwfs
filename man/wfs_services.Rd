@@ -12,7 +12,7 @@ A \link[tibble:tibble]{tibble::tibble} with columns: \code{name}, \code{url}, \c
 }
 \description{
 Returns a tibble of known, tested public services that work with readwfs.
-This isn't exhaustive — it's a starting point. If you find a good one,
+This isn't exhaustive  --  it's a starting point. If you find a good one,
 open an issue.
 }
 \examples{
