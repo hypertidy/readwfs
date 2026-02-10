@@ -37,7 +37,7 @@ Returns a tibble describing each layer: geometry type, feature count
 \examples{
 \dontrun{
 url <- wfs_example_url("list_tasmania")
-wfs_layer_info(url, layers = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+wfs_layer_info(url, layers = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
                version = "2.0.0", srs = "EPSG:28355")
 }
 }

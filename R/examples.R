@@ -6,7 +6,7 @@
 #' @param service Character. One of:
 #'   - `"list_tasmania"`: Tasmania LIST open data WFS (parcels, vegetation,
 #'     local government areas, hydro, transport, and more)
-#'   - `"esri_sample"`: Esri SampleWorldCities WFS (continents, cities —
+#'   - `"esri_sample"`: Esri SampleWorldCities WFS (continents, cities  -- 
 #'     small dataset, always available)
 #' @return A character string with the service URL.
 #' @export
@@ -32,8 +32,8 @@ wfs_example_url <- function(service = c("list_tasmania", "esri_sample")) {
 #' Pre-configured bounding boxes for example areas.
 #'
 #' @param area Character. One of:
-#'   - `"sandy_bay"`: Sandy Bay, Hobart — EPSG:28355 (MGA Zone 55), ~600m x 600m
-#'   - `"hobart"`: Greater Hobart — EPSG:28355, ~10km x 10km
+#'   - `"sandy_bay"`: Sandy Bay, Hobart  --  EPSG:28355 (MGA Zone 55), ~600m x 600m
+#'   - `"hobart"`: Greater Hobart  --  EPSG:28355, ~10km x 10km
 #' @return A named numeric vector (`xmin`, `ymin`, `xmax`, `ymax`).
 #' @export
 #' @examples
@@ -50,7 +50,7 @@ wfs_example_bbox <- function(area = c("sandy_bay", "hobart")) {
 #' Catalogue of known public vector web services
 #'
 #' Returns a tibble of known, tested public services that work with readwfs.
-#' This isn't exhaustive — it's a starting point. If you find a good one,
+#' This isn't exhaustive  --  it's a starting point. If you find a good one,
 #' open an issue.
 #'
 #' @return A [tibble::tibble] with columns: `name`, `url`, `driver`,
@@ -80,7 +80,7 @@ wfs_services <- function() {
     paste0("https://sampleserver6.arcgisonline.com/arcgis/services/",
            "SampleWorldCities/MapServer/WFSServer"),
     "WFS", "Global",
-    "Continents and world cities — small demo dataset",
+    "Continents and world cities  --  small demo dataset",
     "EPSG:4326",
     "Always available, good for testing. Esri-hosted sample server"
   )

@@ -60,8 +60,11 @@ parcels <- wfs_read(
   url,
   layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
   bbox = wfs_example_bbox("sandy_bay"),
-  srs = "EPSG:28355"
+  srs = "EPSG:28355", max_features = 1400
 )
+
+
+
 
 
 parcels

@@ -8,7 +8,7 @@ wfs_read(
   base_url,
   layer,
   bbox = NULL,
-  max_features = NULL,
+  max_features = 100,
   where = NULL,
   driver = "auto",
   version = NULL,
@@ -59,7 +59,7 @@ endpoint and returns a tibble with a \code{wk::wkb} geometry column.
 # Tasmania LIST: cadastral parcels in Sandy Bay
 parcels <- wfs_read(
   wfs_example_url("list_tasmania"),
-  layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+  layer = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
   bbox = wfs_example_bbox("sandy_bay"),
   srs = "EPSG:28355",
   max_features = 100

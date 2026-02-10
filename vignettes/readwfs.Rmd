@@ -21,7 +21,7 @@ Features (OAPIF), and ArcGIS REST endpoints. It returns plain tibbles with
 [gdalraster](https://usdaforestservice.github.io/gdalraster/) for all I/O.
 
 The package is designed to make **navigating** web feature services less
-painful—discovering what layers exist, what fields they have, and pulling
+painful -- discovering what layers exist, what fields they have, and pulling
 just the features you need into R.
 
 ## Finding services
@@ -97,7 +97,7 @@ parcels <- wfs_read(
 parcels
 ```
 
-The `geometry` column is a `wk::wkb` vector—wk's interchange format for
+The `geometry` column is a `wk::wkb` vector -- wk's interchange format for
 spatial data in R:
 
 ```{r}
@@ -158,8 +158,4 @@ wfs_layers("https://example.com/arcgis/rest/services/Data/MapServer",
 You can also force the driver explicitly with `driver = "WFS"`,
 `driver = "ESRIJSON"`, or `driver = "OAPIF"`.
 
-## Design choices
-
-readwfs returns **unclassed tibbles with wk geometry**.
-This keeps the dependency tree small and composable, wk provides interchange for R's spatial formats. 
 

@@ -29,7 +29,7 @@
 #' # Tasmania LIST: cadastral parcels in Sandy Bay
 #' parcels <- wfs_read(
 #'   wfs_example_url("list_tasmania"),
-#'   layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+#'   layer = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
 #'   bbox = wfs_example_bbox("sandy_bay"),
 #'   srs = "EPSG:28355",
 #'   max_features = 100
@@ -65,12 +65,18 @@ wfs_read <- function(base_url,
   if (conn$driver == "WFS") {
     dsn <- build_wfs_read_dsn(
       base_url, layer = layer, bbox = bbox,
-      max_features = max_features,
+      max_features = NULL,
       version = version, srs = srs
     )
   } else {
     dsn <- conn$dsn
   }
+
+  # Enable WFS paging - dramatic performance improvement on large fetches
+  old_paging <- gdalraster::get_config_option("OGR_WFS_PAGING_ALLOWED")
+  gdalraster::set_config_option("OGR_WFS_PAGING_ALLOWED", "YES")
+  on.exit(gdalraster::set_config_option("OGR_WFS_PAGING_ALLOWED",
+                                        old_paging), add = TRUE)
 
   v <- new(gdalraster::GDALVector, dsn, layer, read_only = TRUE)
   on.exit(v$close(), add = TRUE)
@@ -113,7 +119,7 @@ wfs_read <- function(base_url,
 
   if (feat_count > 0 && is.finite(max_features) && feat_count > n) {
     message(sprintf(
-      "  %s features returned (politely capped at max_features = %s, %s more available; use max_features = Inf to get all)",
+      "  %s features returned (capped at max_features = %s, %s more available; use max_features = Inf to get all)",
       format(n, big.mark = ","),
       format(as.integer(max_features), big.mark = ","),
       format(feat_count - n, big.mark = ",")
@@ -127,7 +133,7 @@ wfs_read <- function(base_url,
 #' Convert raw fetch result to tibble with wk geometry
 #' @keywords internal
 as_wk_tibble <- function(raw, geom_col) {
-  # Find the geometry column — may be named differently across drivers
+  # Find the geometry column  --  may be named differently across drivers
   geom_name <- if (!is.null(geom_col) && geom_col %in% names(raw)) {
     geom_col
   } else {

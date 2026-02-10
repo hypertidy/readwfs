@@ -2,7 +2,7 @@
 
 ## Problem
 
-WFS servers impose limits on how many features they return per request. Tasmania LIST caps at around 3,000. Esri defaults to 1,000–2,000. A user asking for "all parcels in Hobart" might need 50,000+ features but only get the first page silently truncated. This is the single most common WFS footgun.
+WFS servers impose limits on how many features they return per request. Tasmania LIST caps at around 3,000. Esri defaults to 1,000-2,000. A user asking for "all parcels in Hobart" might need 50,000+ features but only get the first page silently truncated. This is the single most common WFS footgun.
 
 ## How pagination works across drivers
 
@@ -12,8 +12,8 @@ WFS 2.0 added `startIndex` and `count` to GetFeature. The server also reports it
 
 Request pattern:
 ```
-&startIndex=0&count=1000    → features 0–999
-&startIndex=1000&count=1000 → features 1000–1999
+&startIndex=0&count=1000    -> features 0-999
+&startIndex=1000&count=1000 -> features 1000-1999
 ...
 ```
 
@@ -27,7 +27,7 @@ No `startIndex`. The only control is `maxFeatures`. Some servers support vendor 
 
 ### ArcGIS REST / ESRIJSON
 
-ArcGIS FeatureServer/MapServer has `resultOffset` and `resultRecordCount`. GDAL's ESRIJSON driver handles paging automatically — it reads the `exceededTransferLimit` flag in the JSON response and fetches subsequent pages. No user intervention needed for `v$fetch(-1)`.
+ArcGIS FeatureServer/MapServer has `resultOffset` and `resultRecordCount`. GDAL's ESRIJSON driver handles paging automatically  --  it reads the `exceededTransferLimit` flag in the JSON response and fetches subsequent pages. No user intervention needed for `v$fetch(-1)`.
 
 ### OAPIF (OGC API Features)
 
@@ -136,7 +136,7 @@ This catches the silent truncation problem regardless of pagination strategy.
 
 ## Implementation priority
 
-1. **Truncation warning** — highest value, lowest effort. Do this first.
-2. **Enable GDAL paging by default** — set config options in `wfs_read()`.
-3. **`page_size` parameter** — expose control to the user.
-4. **`wfs_read_chunked()`** — only if someone needs it for memory reasons.
+1. **Truncation warning**  --  highest value, lowest effort. Do this first.
+2. **Enable GDAL paging by default**  --  set config options in `wfs_read()`.
+3. **`page_size` parameter**  --  expose control to the user.
+4. **`wfs_read_chunked()`**  --  only if someone needs it for memory reasons.

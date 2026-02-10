@@ -55,14 +55,14 @@ wfs_find_layers <- function(base_url, pattern, driver = "auto",
 #' @inheritParams wfs_layers
 #' @param layers Character vector of layer names to inspect, or `NULL`
 #'   to inspect all layers. Inspecting all layers can be slow for large
-#'   services—consider using [wfs_find_layers()] first.
+#'   services -- consider using [wfs_find_layers()] first.
 #' @return A [tibble::tibble] with columns: `name`, `geom_column`,
 #'   `geom_type`, `feature_count`, `xmin`, `ymin`, `xmax`, `ymax`, `srs_wkt`.
 #' @export
 #' @examples
 #' \dontrun{
 #' url <- wfs_example_url("list_tasmania")
-#' wfs_layer_info(url, layers = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+#' wfs_layer_info(url, layers = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
 #'                version = "2.0.0", srs = "EPSG:28355")
 #' }
 wfs_layer_info <- function(base_url, layers = NULL, driver = "auto",
@@ -95,7 +95,8 @@ wfs_layer_info <- function(base_url, layers = NULL, driver = "auto",
 #' Inspect a single layer via GDALVector
 #' @keywords internal
 layer_info_one <- function(dsn, layer_name) {
-  v <- new(gdalraster::GDALVector, dsn, layer_name, read_only = TRUE)
+  v <- new(gdalraster::GDALVector, dsn, layer_name, read_only = TRUE,
+           open_options = "TRUST_CAPABILITIES_BOUNDS=YES")
   on.exit(v$close(), add = TRUE)
 
   defn <- v$getLayerDefn()
@@ -140,7 +141,7 @@ layer_info_one <- function(dsn, layer_name) {
 #' @examples
 #' \dontrun{
 #' url <- wfs_example_url("list_tasmania")
-#' wfs_fields(url, "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+#' wfs_fields(url, "Public_OpenDataWFS:LIST_Cadastral_Parcels",
 #'            version = "2.0.0", srs = "EPSG:28355")
 #' }
 wfs_fields <- function(base_url, layer, driver = "auto",

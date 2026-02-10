@@ -24,7 +24,7 @@ name, type, width, and whether it's nullable.
 \examples{
 \dontrun{
 url <- wfs_example_url("list_tasmania")
-wfs_fields(url, "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+wfs_fields(url, "Public_OpenDataWFS:LIST_Cadastral_Parcels",
            version = "2.0.0", srs = "EPSG:28355")
 }
 }

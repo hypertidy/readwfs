@@ -13,7 +13,7 @@ test_that("wfs_layers works for Tasmania LIST", {
 
   expect_type(layers, "character")
   expect_true(length(layers) > 0)
-  expect_true(any(grepl("CADASTRAL", layers)))
+  expect_true(any(grepl("Cadastral", layers)))
 })
 
 test_that("wfs_find_layers filters correctly", {
@@ -38,7 +38,7 @@ test_that("wfs_read returns tibble with wk geometry for Tasmania", {
 
   parcels <- wfs_read(
     wfs_example_url("list_tasmania"),
-    layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+    layer = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
     bbox = wfs_example_bbox("sandy_bay"),
     srs = "EPSG:28355",
     max_features = 10
@@ -57,7 +57,7 @@ test_that("wfs_layer_info returns metadata tibble", {
 
   info <- wfs_layer_info(
     wfs_example_url("list_tasmania"),
-    layers = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+    layers = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
     version = "2.0.0",
     srs = "EPSG:28355"
   )
@@ -74,7 +74,7 @@ test_that("wfs_fields returns schema for a layer", {
 
   fields <- wfs_fields(
     wfs_example_url("list_tasmania"),
-    layer = "Public_OpenDataWFS:LIST_CADASTRAL_PARCELS",
+    layer = "Public_OpenDataWFS:LIST_Cadastral_Parcels",
     version = "2.0.0",
     srs = "EPSG:28355"
   )
@@ -92,3 +92,4 @@ test_that("Esri sample WFS works", {
   expect_type(layers, "character")
   expect_true(length(layers) > 0)
 })
+
