@@ -98,7 +98,7 @@ Or set `driver` explicitly: `wfs_read(url, layer, driver = "ESRIJSON")`.
 
 ## Design
 
-- **gdalraster** for all I/O — no sf or terra required
+- **gdalraster** for all I/O 
 - **wk** vectors for geometry interchange
 - **tibble** for tabular output (unclassed, no sticky geometry)
 - **geos** for spatial operations (suggested, not required)
